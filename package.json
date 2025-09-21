@@ -2,10 +2,19 @@
   "name": "aut_service",
   "version": "1.0.0",
   "description": "microservicios de autenticacion + gateway",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "gropo DivH1",
-  "license": "ISC"
+  "author": "grupo DivH1",
+  "license": "ISC",
+  "dependencies": {
+    "joi": "^18.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
