@@ -1,12 +1,29 @@
-🚀 Auth_Service: Guía de Arranque y TroubleshootingEste documento es la guía oficial para levantar el entorno de desarrollo del microservicio de autenticación.Utilizamos Docker Compose para orquestar la Base de Datos (MongoDB) y el cliente visual, mientras que el backend de Node.js se ejecuta localmente para una fácil depuración (npm run dev).⚙️ 1. Requisitos y Configuración Inicial1.1. Dependencias NecesariasAsegúrate de tener instalados:Docker Desktop (o Docker Engine).Node.js y npm (o yarn).1.2. Configuración Crítica del .envPara que tu aplicación local (npm run dev) pueda conectarse al contenedor de MongoDB, la variable MONGODB_URI debe usar localhost.Asegura que tu archivo .env contenga:Fragmento de código# Configuración de la Base de Datos
-MONGODB_URI=mongodb://localhost:27017/authdb
+# 🚀 Auth_Service: Guía de Arranque y Troubleshooting
 
-# JWT (¡NO DEJAR VACÍO!)
-JWT_SECRET=tu-cadena-secreta-larga-y-completamente-aleatoria
-JWT_EXPIRATION=1h 
-1.3. Instalar Dependencias del ProyectoEjecuta este comando una sola vez en la raíz del proyecto:Bashnpm install
-▶️ 2. Flujo de ArranqueSigue estos dos pasos en orden:Paso 1: Levantar los Servicios de Docker (DB y Cliente)Este comando inicia los servicios esenciales definidos en el docker-compose.yml:Bashdocker-compose up -d mongo-server mongo-client
-TareaVerificaciónEstado:Confirma que los contenedores estén en estado Up: docker-compose psAcceso DB:Abre el cliente Mongo Express en: http://localhost:8082Paso 2: Arrancar el Backend (API de Node.js)Inicia tu aplicación Node.js en modo desarrollo:Bashnpm run dev
-La API ahora es accesible en: http://localhost:3001.3. Guía de Troubleshooting (Errores Comunes)Documentamos los problemas más frecuentes encontrados y sus soluciones definitivas:3.1. Problemas de Conexión y HostErrorCausa PrincipalSolucióngetaddrinfo ENOTFOUND mongo-serverLa API local usó el nombre interno de Docker.Corregir el .env para usar localhost (Ver Sección 1.2).ECONNREFUSED 127.0.0.1:27017MongoDB no está listo o el puerto no está expuesto.Asegurar que el contenedor de Mongo esté Up y que el docker-compose.yml contenga: ports: - "27017:27017".3.2. Contenedor Reiniciando (Restarting)Si mongo-server se reinicia continuamente, es casi seguro un problema de datos o permisos corruptos en el volumen.Detén y elimina el contenedor y su volumen de datos asociado:Bashdocker-compose down -v
-Vuelve a ejecutar el Paso 1 del flujo de arranque para iniciar la DB con un estado limpio.3.3. Conflicto de Nombres o PuertosSi recibes errores como Conflict. The container name "/..." is already in use o address already in use:Para Contenedores: Elimina el contenedor que está causando el conflicto forzadamente:Bashdocker rm -f <nombre-del-contenedor>
-Para Puertos: Algún otro programa está usando el puerto. Detén el proceso conflictivo o cambia el puerto en el docker-compose.yml (ej., usa 8083:8082 en lugar de 8082:8082).4. Detener y Limpiar el EntornoPara finalizar la sesión de trabajo y liberar recursos:ComandoFuncióndocker-compose stopDetiene los contenedores, pero los mantiene guardados.docker-compose downDetiene y elimina los contenedores y redes (práctica recomendada al finalizar).
+Este documento describe cómo levantar el entorno de desarrollo y la aplicación del microservicio de autenticación.  
+Utilizamos **Docker Compose** para orquestar la base de datos (MongoDB) y el cliente visual (mongo-client), mientras que el backend de Node.js se ejecuta de forma local para facilitar la depuración (`npm run dev`).
+
+---
+
+## 🛠️ 1. Requisitos y Configuración Previa
+
+Asegúrate de tener instalados:
+
+- Docker Desktop (para los servicios de contenedores)
+- Node.js
+- Dependencias del proyecto
+
+### 1.1. Modificación Crítica del Archivo `.env`
+
+Para que tu aplicación local (`npm run dev`) pueda conectarse al contenedor de MongoDB, la variable `MONGODB_URI` debe apuntar a tu máquina anfitriona (`localhost`), ya que el puerto `27017` está expuesto por Docker:
+
+| Configuración | Valor Requerido |
+|---------------|----------------|
+| MONGODB_URI   | mongodb://localhost:27017/authdb |
+
+### 1.2. Instalación de Dependencias
+
+Ejecuta este comando una sola vez para instalar todas las dependencias del proyecto:
+
+```bash
+npm install
