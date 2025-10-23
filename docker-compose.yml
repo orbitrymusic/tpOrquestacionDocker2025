@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   mongo-server:
-    image: mongo
+    image: mongo:4.4
     container_name: mongo-server
     restart: always
     ports:
@@ -24,7 +24,7 @@ services:
       - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
       - ME_CONFIG_MONGODB_DATABASE=ToDoList
     ports:
-      - "8081:8081"
+      - "8082:8082"
     networks:
       - mongodb_network
 volumes:

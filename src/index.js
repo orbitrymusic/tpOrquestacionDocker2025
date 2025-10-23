@@ -10,14 +10,14 @@ const PORT = envs.PORT;
 const MONGODB_URI = envs.MONGODB_URI; 
 
 mongoose.connection.on('error', (err) => {
-  console.error('❌ Error de conexión a la base de datos:', err);
+  console.error(' Error de conexión a la base de datos:', err);
   process.exit(1);
 });
 
 mongoose.connection.on('connected', () => {
-  console.log('✅ ¡Conexión exitosa a la base de datos de MongoDB!');
+  console.log('¡Conexión exitosa a la base de datos de MongoDB!');
   app.listen(PORT, () => {
-    console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
   });
 });
 
@@ -27,7 +27,7 @@ const connectDB = async () => {
     // Usamos la variable MONGO_URI configurada en .env
     await mongoose.connect(MONGODB_URI); 
   } catch (err) {
-    console.error('❌ Error al intentar conectar a MongoDB:', err.message);
+    console.error('Error al intentar conectar a MongoDB:', err.message);
   }
 };
 

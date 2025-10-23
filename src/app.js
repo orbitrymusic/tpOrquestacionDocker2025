@@ -19,6 +19,7 @@ app.use(cors());
 // Rutas de la API con sus prefijos específicos
 // app.use('/api/users');
 
+
 // Manejador de errores para rutas no encontradas (404)
 app.use((req, res) => {
     res.status(404).json({ message: 'Ruta no encontrada.' });
