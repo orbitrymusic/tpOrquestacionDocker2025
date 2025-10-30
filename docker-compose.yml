@@ -22,7 +22,7 @@ services:
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
-      - ME_CONFIG_MONGODB_DATABASE=ToDoList
+      - ME_CONFIG_MONGODB_DATABASE=AuthService
     ports:
       - "8082:8082"
     networks:

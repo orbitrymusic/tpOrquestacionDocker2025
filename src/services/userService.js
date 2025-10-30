@@ -1,5 +1,10 @@
 import Usuario from '../models/Usuario.js';
 import bcrypt from 'bcrypt';
+import { generateToken } from './jwt.service.js'
+
+
+
+
 
 class UserService {
   constructor() {
@@ -31,17 +36,35 @@ class UserService {
       return null;
     }
     const isMatch = await bcrypt.compare(password, user.password);
-    return isMatch ? user : null;
+    
+    if (!isMatch) {
+        return null; // Contraseña incorrecta
+    }
+    
+    // Generar el Token JWT
+    // Se asegura de que el campo 'password' NO esté incluido en el objeto retornado.
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password;
+
+    const token = generateToken(userWithoutPassword);
+
+    return { user: userWithoutPassword, token }; // <--- Retorna el usuario y el token
   }
+
+
+
   async getAll() {
     return this.model.find().select('-password');
   }
 
+
+
+
   //* modificar nombre usuario 
   async update(userId, updateData) {
     try {
-      const user = await Usuario.findByIdAndUpdate(userId, updateData, {new: true});
-      if(!user){
+      const user = await Usuario.findByIdAndUpdate(userId, updateData, { new: true });
+      if (!user) {
         return null;
       }
       return user;
@@ -50,6 +73,6 @@ class UserService {
       throw error;
     }
   }
-}
+};
 
 export default new UserService();
