@@ -9,6 +9,11 @@ class UserService {
     this.model = Usuario;
   }
 
+  async findById(id) {
+    // Busca por ID y excluye la contraseña
+    return await this.model.findById(id).select('-password');
+  }
+
   async register(data) {
     console.log("Iniciando la función de registro...");
     try {

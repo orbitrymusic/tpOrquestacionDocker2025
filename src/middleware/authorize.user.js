@@ -3,7 +3,7 @@
 export const authorizeUser = async (req, res, next) => {
     try {
         // 1. Obtener el ID del usuario autenticado del JWT (adjuntado por verifyToken)
-        const userIdFromToken = req.user.id; 
+        const userIdFromToken = req.user.id.toString(); 
         
         // 2. Obtener el ID del recurso que se intenta modificar (de la URL)
         const resourceId = req.params.id; 
@@ -17,7 +17,7 @@ export const authorizeUser = async (req, res, next) => {
              return res.status(500).json({ message: "Error interno: Identidad no disponible en la solicitud." });
         }
 
-        // 💡 LÓGICA DE AUTORIZACIÓN (El corazón del middleware)
+        //LÓGICA DE AUTORIZACIÓN (El corazón del middleware)
 
         // A) Autorización para Administradores:
         // Si el usuario es 'admin', tiene acceso total.
