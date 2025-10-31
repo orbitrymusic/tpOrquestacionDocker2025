@@ -1,8 +1,6 @@
-import Usuario from '../models/Usuario.js';
+import Usuario from '../models/User.entity.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from './jwt.service.js'
-
-
 
 
 

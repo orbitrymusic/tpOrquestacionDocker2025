@@ -2,7 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-// Importa enrutadores
+
+
+// 1. IMPORTAR ENRUTADORES
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
 
 
 // Carga las variables de entorno desde el archivo .env
@@ -16,8 +20,12 @@ app.use(express.json());
 app.use(cors());
 
 
-// Rutas de la API con sus prefijos específicos
-// app.use('/api/users');
+
+// Rutas de Autenticación (Login, Register) - Rutas públicas
+app.use('/api/auth', authRoutes);
+
+// Rutas de Usuario (Perfil, Update) - Rutas protegidas
+app.use('/api/users', userRoutes);
 
 
 // Manejador de errores para rutas no encontradas (404)

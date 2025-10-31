@@ -1,32 +1,28 @@
 import jwt from 'jsonwebtoken';
-import { envs } from '../config/envs.js'; // Asumo que tus variables están aquí
+import { envs } from '../config/envs.js'; // Necesita el path relativo correcto a 'config'
 
 /**
  * Genera un token JWT para un usuario dado.
- * @param {object} user - Objeto de usuario de la base de datos.
- * @returns {string} El token JWT generado.
+ * El payload solo debe contener información no sensible (ID, email).
+ * @param {object} user - Objeto de usuario de la base de datos (sin la contraseña).
+ * @returns {string} Token JWT generado.
  */
 export const generateToken = (user) => {
     // 1. Definir el PAYLOAD (los datos que van dentro del token)
-    // Usamos los campos críticos para la Autorización (ID, Rol, Email).
+    // El ID de MongoDB (_id) debe ser serializado a string para el JWT.
     const payload = {
-        id: user._id, // Usamos el ID de MongoDB
+        id: user._id.toString(), // CRÍTICO: Usar .toString() para asegurar la serialización
         email: user.email,
-        // CRÍTICO: Debes asegurar que el campo 'rol' exista en tu modelo.
-        // Asumo que el modelo Usuario tiene un campo 'rol' o lo obtendrás.
-        rol: user.rol || 'alumno', 
-        // Si tienes permisos específicos, agrégalos aquí:
-        // permisos: user.permisos || [] 
+        nombre: user.nombre,
+        rol: user.rol || 'default' // Aseguramos que siempre haya un rol para autorización
     };
 
-    // 2. Firmar el token
+    // 2. Firmar el token con la clave secreta y la expiración definidas en ENVS
     const token = jwt.sign(
         payload,
-        envs.JWT_SECRET, // Clave secreta del .env
-        { expiresIn: envs.JWT_EXPIRATION } // Tiempo de expiración del .env (ej. '1h')
+        envs.JWT_SECRET,
+        { expiresIn: envs.JWT_EXPIRATION } 
     );
 
     return token;
 };
-
-// NOTA: La función de verificación (middleware) la haremos en el Paso 3.

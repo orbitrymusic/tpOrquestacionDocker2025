@@ -4,9 +4,9 @@ const durationRegex = /^(\d+[smhd])+$/;
 
 const envsSchema = Joi.object({
     MONGODB_URI: Joi.string().required(),
-    PORT: Joi.number().min(32).required(),
-    // JWT_SECRET: Joi.string().required(),
-    // JWT_EXPIRATION: Joi.string().required(),
+    PORT: Joi.number().required(),
+    JWT_SECRET: Joi.string().min(32).required(),
+    JWT_EXPIRATION: Joi.string().required(),
     NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
 }).unknown(true);
 

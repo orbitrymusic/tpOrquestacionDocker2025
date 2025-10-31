@@ -1,4 +1,4 @@
-import UserService from '../services/UserService.js';
+import UserService from '../services/user.service.js';
 
 // Asumo que tienes una función para manejar errores estandarizados
 // import { handleError } from '../utils/handleError.js';
@@ -6,7 +6,7 @@ import UserService from '../services/UserService.js';
 export const loginController = async (req, res) => {
     const { email, password } = req.body;
 
-    // Validación de entrada (Joi o Express-Validator) va aquí...
+    // TODO: Validación de entrada (Joi o Express-Validator)
 
     try {
         const result = await UserService.login(email, password);
@@ -29,3 +29,35 @@ export const loginController = async (req, res) => {
     }
 };
 
+//Controlador para el registro de nuevos usuarios
+export const registerController = async (req, res) => {
+    const { nombre, email, password } = req.body;
+
+    // TODO: Validación de entrada (mismos campos requeridos, formato de email, seguridad de password)
+
+    try {
+        // 1. Verificar si el email ya existe (esto idealmente lo hace el servicio/modelo)
+        // 2. Llamar al servicio que maneja la lógica de negocio (cifrado, guardado)
+        const newUser = await UserService.register({ nombre, email, password });
+
+        // Nota: Por seguridad, no devolvemos el hash de la contraseña.
+        // El servicio de registro ya se encarga de cifrarla.
+        
+        return res.status(201).json({
+            message: 'Usuario registrado exitosamente.',
+            user: {
+                id: newUser._id,
+                nombre: newUser.nombre,
+                email: newUser.email
+            }
+        });
+
+    } catch (error) {
+        // Manejo de errores comunes (ej. email duplicado)
+        if (error.code === 11000) { // Código de error de duplicidad de Mongo
+            return res.status(409).json({ error: 'El email proporcionado ya está registrado.' });
+        }
+        console.error("Error en registerController:", error);
+        return res.status(500).json({ error: 'Error interno del servidor durante el registro.' });
+    }
+};
