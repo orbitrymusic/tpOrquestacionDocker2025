@@ -32,9 +32,9 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('Datos recibidos para login:', { email, password });
-    const user = await UserService.login(email, password);
+    const userAndToken = await UserService.login(email, password);
 
-    if (!user) {
+    if (!userAndToken) {
       return res.status(401).json(
         { message: 'Correo o contraseña incorrectos.' }
       );
@@ -42,8 +42,8 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json(
       { message: 'Inicio de sesión exitoso.',
-        token: result.token, 
-        user: result.user
+        token: userAndToken.token, 
+        user: userAndToken.user
      });
   } catch (error) {
     res.status(500).json({ message: 'Error en el inicio de sesión', error });
@@ -110,5 +110,38 @@ export const deleteUserController = async (req, res) => {
     } catch (error) {
         console.error("Error al eliminar el usuario:", error);
         res.status(500).json({ message: 'Error al procesar la eliminación', error: error.message });
+    }
+};
+
+// =======================================================
+// === CONTROLADOR: SINCRONIZACIÓN CORE ===
+// =======================================================
+
+/**
+ * @function syncAlumnosController
+ * @description Inicia la sincronización de alumnos con el microservicio CORE.
+ * @access Protegido (Roles: 'admin', 'secretaria')
+ */
+export const syncAlumnosController = async (req, res) => {
+    try {
+        // La lógica de negocio pesada, hasheo y notificación está en el Servicio.
+        const result = await UserService.syncAlumnosAndNotify();
+        
+        if (result.success) {
+            // 200 OK si la operación se inició/ejecutó con éxito (aunque haya fallos individuales)
+            return res.status(200).json({ 
+                message: result.message, 
+                summary: result.summary 
+            });
+        } else {
+             // 500 Internal Server Error si falla la conexión con CORE o el proceso principal
+            return res.status(500).json({ 
+                message: 'Fallo crítico al iniciar la sincronización con CORE.', 
+                error: result.message 
+            });
+        }
+    } catch (error) {
+        console.error("Error CRÍTICO en syncAlumnosController:", error);
+        return res.status(500).json({ message: 'Error interno del servidor durante la sincronización.', error: error.message });
     }
 };

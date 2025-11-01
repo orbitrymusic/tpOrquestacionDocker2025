@@ -29,12 +29,23 @@ const usuarioSchema = new mongoose.Schema({
     default: 'alumno',
     required: true // El campo rol debe ser requerido para la autorización
   }, 
-  //CAMPO AÑADIDO: Estado para el Borrado Lógico
-  estado: { 
+    estado: { 
     type: String, 
     enum: ['active', 'inactive'], 
     default: 'active' 
   }, 
+   // === CAMPOS AÑADIDOS PARA SINCRONIZACIÓN CON CORE ===
+  dni: { 
+    type: String, 
+    required: true, 
+    unique: true, // CRÍTICO: Debe ser único para identificación
+  },
+  id_externo_core: {
+    type: String,
+    required: true,
+    unique: true, // CRÍTICO: Debe ser único para auditoría y seguimiento
+    select: false // No se expone por defecto
+  }
   
 }, 
 {

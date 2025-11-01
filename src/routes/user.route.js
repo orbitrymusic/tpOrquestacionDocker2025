@@ -6,10 +6,25 @@ import UserService from '../services/user.service.js';
 import {
     getAllUsersController,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    syncAlumnosController
 } from '../controllers/user.controller.js';
 
 const router = Router();
+
+
+// NUEVA RUTA: SINCRONIZACIÓN CORE
+/**
+ * @route POST /api/users/sync
+ * @description Inicia el proceso de sincronización anual/masiva de alumnos desde CORE.
+ * CRÍTICO: Debe ser protegido solo para 'admin' o 'secretaria'.
+ */
+router.post('/sync',
+    verifyToken,
+    // 💡 AHORA PERMITE AMBOS ROLES: admin Y secretaria
+    authorizeRole(['admin', 'secretaria']), 
+    syncAlumnosController
+);
 
 // === RUTAS DE GESTIÓN DE USUARIOS ===
 
