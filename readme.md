@@ -98,17 +98,18 @@ npm start
 
 El proyecto usa la librería dotenv para cargar variables de entorno y realiza una validación estricta al inicio de la aplicación para asegurar la disponibilidad y el formato correcto de las variables críticas (DB_URI, JWT_SECRET, etc.).
 
-🌐 Endpoints Principales
-Módulo	Método	Ruta	Descripción	Rol Requerido	Estado
-Auth	POST	/api/auth/register	Registrar nuevo usuario	Público	✅
-Auth	POST	/api/auth/login	Iniciar sesión y obtener JWT	Público	✅
-User	GET	/api/users/profile	Obtener perfil del usuario autenticado	User	✅
-User	GET	/api/users	Listar todos los usuarios activos	Admin / Secretaria	✅
-User	PUT	/api/users/:id	Actualizar datos de usuario	Admin / Self-Service	✅
-User	DELETE	/api/users/:id	Borrado lógico de usuario	Admin / Self-Service	✅
-Materia	GET	/api/materias	Listar materias	Profesor / Alumno	🚧
-Tarea	POST	/api/tareas	Crear nueva tarea	Profesor	🚧
-Entrega	POST	/api/entregas	Subir entrega	Alumno	🚧
+## 🌐 Endpoints Principales
+
+| 🧩 Módulo | 🔧 Método | 🛣️ Ruta | 📝 Descripción | 👤 Rol Requerido | ⚙️ Estado |
+|:-----------|:----------|:--------|:----------------|:----------------|:----------|
+| **Auth** | POST | `/api/auth/register` | Registrar nuevo usuario | Público | ✅ |
+| **Auth** | POST | `/api/auth/login` | Iniciar sesión y obtener JWT | Público | ✅ |
+| **User** | GET | `/api/users/profile` | Obtener perfil del usuario autenticado | Usuario (Cualquier Rol) | ✅ |
+| **User** | GET | `/api/users` | Listar todos los usuarios activos | Admin / Secretaria | ✅ |
+| **User** | PUT | `/api/users/:id` | Actualizar datos de usuario | Admin / Self-Service | ✅ |
+| **User** | DELETE | `/api/users/:id` | Borrado lógico de usuario | Admin / Self-Service | ✅ |
+
+
 🧩 Buenas Prácticas y Estilo
 
 ✅ Código estructurado por capas y responsabilidades (Controller, Service, Model)
