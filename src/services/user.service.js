@@ -17,11 +17,12 @@ class UserService {
   async register(data) {
     console.log("Iniciando la función de registro...");
     try {
-      const { nombre, email, password } = data;
+      const { nombre, email, password, rol } = data;
       const newUser = new this.model({
         nombre,
         email,
         password: password,
+        rol: rol,
       });
 
       const savedUser = await newUser.save(); // <-- Aquí esperamos que se guarde.
