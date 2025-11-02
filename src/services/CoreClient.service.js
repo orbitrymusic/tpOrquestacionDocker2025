@@ -4,6 +4,8 @@
 import { envs } from '../config/envs.js';
 import AmqpLogger from './AmqpLogger.service.js'; 
 
+
+
 /**
  * Servicio Cliente HTTP dedicado a interactuar con el Microservicio CORE.
  * Se encarga de la seguridad (API Key) y el manejo de errores de red/API.

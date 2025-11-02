@@ -21,12 +21,24 @@ class UserService {
     // Implementación de una generación de contraseña segura (ajustada a tu necesidad)
     return crypto.randomBytes(4).toString('hex'); // 8 caracteres hexadecimales
   }
-
+//Función auxiliar para extraer mensajes detallados de Mongoose
+  _formatMongooseError(error) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return `Error de validación: ${messages.join('; ')}`;
+    }
+    // Para errores de índice único (duplicados, error.code === 11000)
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue).join(', ');
+      return `Error de duplicado: El campo '${field}' ya existe.`;
+    }
+    return error.message;
+  }
   /**
    * Sincroniza alumnos desde el microservicio CORE, actualizando o creando usuarios
    * con rol 'alumno' y emite logs de cada operación.
    */
-  async syncAlumnosAndNotify() {
+async syncAlumnosAndNotify() {
     const operationName = 'SINC_ALUMNOS';
     AmqpLogger.info(`[${operationName}] Iniciando proceso de sincronización de alumnos con CORE.`, { module: envs.moduleName });
 
@@ -48,16 +60,17 @@ class UserService {
 
     // 2. Procesar los datos (Upsert: Actualizar o Insertar)
     for (const alumno of coreAlumnos) {
-      // Usaremos el DNI o el ID Externo de CORE como identificadores únicos
+      let failReason = ''; // Inicializamos la razón de fallo para este alumno
       try {
+        // // Asegurar que existan datos críticos antes de mapear (primera capa de validación)
+        // if (!alumno.email || !alumno.dni || !alumno.id_externo_core) {
+        //    throw new Error('Datos de alumno incompletos (requiere email, dni, id_externo_core).');
+        // }
+
+        // Usaremos el DNI o el ID Externo de CORE como identificadores únicos
         const existingUser = await this.model.findOne({
           $or: [{ dni: alumno.dni }, { id_externo_core: alumno.id_externo_core }]
         });
-
-          // Asegurar que existan datos críticos antes de mapear
-        if (!alumno.email || !alumno.dni || !alumno.id_externo_core) {
-           throw new Error('Datos de alumno incompletos (requiere email, dni, id_externo_core).');
-        }
 
         // Datos mapeados de CORE a nuestro modelo
         const mappedData = {
@@ -81,7 +94,11 @@ class UserService {
             // Actualizamos datos y reactivamos si estaba inactivo
             const updatedFields = { ...mappedData, estado: 'active' };
 
-            await this.model.updateOne({ _id: existingUser._id }, { $set: updatedFields });
+            // Usamos findByIdAndUpdate para que se ejecuten las validaciones de Mongoose si aplica
+            await this.model.findByIdAndUpdate(existingUser._id, updatedFields, { 
+                runValidators: true, 
+                new: true 
+            });
             count.updated++;
 
             AmqpLogger.info(`[${operationName}] Usuario existente actualizado y/o reactivado.`, {
@@ -116,7 +133,7 @@ class UserService {
           const notificationSuccess = await NotificationClientService.sendWelcomeEmail(
             newUser.email, 
             newUser.nombre, 
-            temporaryPassword // CRÍTICO: Se envía la clave temporal SIN HASHEAR
+            temporaryPassword //Se envía la clave temporal SIN HASHEAR
           );
           
           if (!notificationSuccess) {
@@ -129,13 +146,18 @@ class UserService {
         }
 
       } catch (iterationError) {
-        failedStudents.push({ dni: alumno.dni, reason: iterationError.message });
-        AmqpLogger.error(`[${operationName}] Error al procesar alumno DNI ${alumno.dni}.`, {
-          error: iterationError.message,
+        //Usamos la función auxiliar para formatear el mensaje de Mongoose
+        failReason = this._formatMongooseError(iterationError);
+
+        // Si el alumno tiene DNI pero falló por validación de Mongoose, lo registramos
+        failedStudents.push({ dni: alumno.dni, reason: failReason });
+        AmqpLogger.error(`[${operationName}] Error al procesar alumno DNI ${alumno.dni || 'FALTA_DNI'}.`, {
+          error: failReason, // Logueamos el mensaje formateado
           alumno: alumno
         });
       }
     }
+
 
     // 3. Finalización y Resumen
     const summary = `Sincronización finalizada. Creados: ${count.created}, Actualizados/Reactivados: ${count.updated}, Omitidos: ${count.skipped}.`;
