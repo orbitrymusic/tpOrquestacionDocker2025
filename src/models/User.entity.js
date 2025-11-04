@@ -37,15 +37,15 @@ const usuarioSchema = new mongoose.Schema({
    // === CAMPOS AÑADIDOS PARA SINCRONIZACIÓN CON CORE ===
   dni: { 
     type: String, 
-    required: true, 
+    required: false, 
     unique: true, // CRÍTICO: Debe ser único para identificación
   },
   id_externo_core: {
     type: String,
-    required: true,
-    unique: true, // CRÍTICO: Debe ser único para auditoría y seguimiento
-    select: false // No se expone por defecto
-  }
+    required: false, // Ahora es opcional en la creación
+    unique: true,
+    sparse: true // Permite múltiples valores nulos
+  },
   
 }, 
 {
