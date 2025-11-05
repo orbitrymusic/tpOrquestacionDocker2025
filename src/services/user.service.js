@@ -197,27 +197,75 @@ async syncAlumnosAndNotify() {
       throw error; // <-- Lanzamos el error para que el controlador lo atrape.
     }
   }
-
-  async login(email, password) {
-    const user = await this.model.findOne({ email, estado: 'active' }).select('+password');
+  //testeo de nueva funcion 
+  async login(identifier, password) {
+    // Determinar si el identificador es un email o un DNI
+    const isEmail = identifier.includes('@');
+    
+    // Buscar usuario por email o DNI según corresponda
+    const query = isEmail 
+      ? { email: identifier, estado: 'active' }
+      : { dni: identifier, estado: 'active' };
+    
+    const user = await this.model.findOne(query).select('+password');
+    
     if (!user) {
+      AmqpLogger.warn('LOGIN_FAILED', { 
+        identifier, 
+        reason: 'Usuario no encontrado',
+        module: envs.moduleName 
+      });
       return null;
     }
+    
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
+      AmqpLogger.warn('LOGIN_FAILED', { 
+        userId: user._id.toString(),
+        identifier, 
+        reason: 'Contraseña incorrecta',
+        module: envs.moduleName 
+      });
       return null; // Contraseña incorrecta
     }
 
+    // Login exitoso
+    AmqpLogger.info('LOGIN_SUCCESS', { 
+      userId: user._id.toString(),
+      rol: user.rol,
+      module: envs.moduleName 
+    });
+
     // Generar el Token JWT
-    // Se asegura de que el campo 'password' NO esté incluido en el objeto retornado.
     const userWithoutPassword = user.toObject();
     delete userWithoutPassword.password;
 
     const token = generateToken(userWithoutPassword);
 
-    return { user: userWithoutPassword, token }; // <--- Retorna el usuario y el token
+    return { user: userWithoutPassword, token };
   }
+//fn anterior
+  // async login(email, password) {
+  //   const user = await this.model.findOne({ email, estado: 'active' }).select('+password');
+  //   if (!user) {
+  //     return null;
+  //   }
+  //   const isMatch = await bcrypt.compare(password, user.password);
+
+  //   if (!isMatch) {
+  //     return null; // Contraseña incorrecta
+  //   }
+
+  //   // Generar el Token JWT
+  //   // Se asegura de que el campo 'password' NO esté incluido en el objeto retornado.
+  //   const userWithoutPassword = user.toObject();
+  //   delete userWithoutPassword.password;
+
+  //   const token = generateToken(userWithoutPassword);
+
+  //   return { user: userWithoutPassword, token }; // <--- Retorna el usuario y el token
+  // }
 
 
 
