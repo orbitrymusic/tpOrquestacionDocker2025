@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="contenedor">
+        <img src="assets/campuV.jpg" alt="logo banco">
+        <form id='rulo'action="">
+            <fieldset>
+                <h1>ACCESO</h1>
+                <p><label for="">Usuario</label>
+                <input type="text" name="u" id=""></p>
+                <p><label for="">Contraseña</label>
+                <input type="password" name="p" id=""></p>
+                <input type="button" value="Ingresar" onclick='login(this.form)'>
+            </fieldset>
+        </form>
+    </div>
+    <script type="module">
+        import { login } from './login.js';
+   
+        document.querySelector('input[type="button"]').onclick = function () {
+            login(this.form);
+        };
+    </script>
+   
+    <script type="module" src="./login.js"></script>
+   
+</body>
+</html>
+
+
+
