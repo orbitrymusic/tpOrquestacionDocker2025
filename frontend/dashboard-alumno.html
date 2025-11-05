@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Alumno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo y título -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg">Portal Estudiante</h1>
+                        <p class="text-blue-100 text-xs">Sistema de Gestión Educativa</p>
+                    </div>
+                </div>
+
+                <!-- Usuario y acciones -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-white font-medium" id="userNameNav">Cargando...</p>
+                        <p class="text-blue-100 text-sm">DNI: <span id="userDniNav">-</span></p>
+                    </div>
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg px-3 py-2 transition duration-200">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Dropdown content -->
+                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-10">
+                            <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-150">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span>Mi Perfil</span>
+                                </div>
+                            </a>
+                            <button id="logoutBtn" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition duration-150">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    <span>Cerrar Sesión</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Bienvenida -->
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl shadow-lg p-8 mb-8 text-white">
+            <h2 class="text-3xl font-bold mb-2">¡Bienvenido, <span id="userNameWelcome">Estudiante</span>!</h2>
+            <p class="text-blue-100">Aquí podrás ver tu información académica y mantenerte al día con tus estudios.</p>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            <!-- Card: Mis Materias -->
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Mis Materias</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div id="materiasContent" class="space-y-3">
+                        <!-- Placeholder mientras se integra el microservicio -->
+                        <div class="flex items-center justify-center py-8 text-gray-400">
+                            <div class="text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <p class="text-sm font-medium">Próximamente disponible</p>
+                                <p class="text-xs mt-1">Integración con módulo académico en desarrollo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Trabajos Pendientes -->
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Trabajos Pendientes</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div id="trabajosContent" class="space-y-3">
+                        <!-- Placeholder mientras se integra el microservicio -->
+                        <div class="flex items-center justify-center py-8 text-gray-400">
+                            <div class="text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <p class="text-sm font-medium">Próximamente disponible</p>
+                                <p class="text-xs mt-1">Integración con módulo académico en desarrollo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Personal -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                </svg>
+                Información Personal
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Nombre Completo</p>
+                    <p class="text-lg font-semibold text-gray-800" id="userNameInfo">-</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">DNI</p>
+                    <p class="text-lg font-semibold text-gray-800" id="userDniInfo">-</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Email</p>
+                    <p class="text-lg font-semibold text-gray-800" id="userEmailInfo">-</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Estado</p>
+                    <span id="userEstadoInfo" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        Activo
+                    </span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'http://localhost:4000/api';
+
+        // Toggle dropdown menu
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenuDropdown = document.getElementById('userMenuDropdown');
+
+        userMenuBtn.addEventListener('click', () => {
+            userMenuDropdown.classList.toggle('hidden');
+        });
+
+        // Cerrar dropdown al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!userMenuBtn.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+                userMenuDropdown.classList.add('hidden');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Cargar datos del usuario
+        async function loadUserData() {
+            const token = sessionStorage.getItem('authToken');
+            const userData = sessionStorage.getItem('userData');
+
+            if (!token || !userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const user = JSON.parse(userData);
+
+                // Actualizar información en la interfaz
+                document.getElementById('userNameNav').textContent = user.nombre;
+                document.getElementById('userDniNav').textContent = user.dni;
+                document.getElementById('userNameWelcome').textContent = user.nombre.split(' ')[0];
+                document.getElementById('userNameInfo').textContent = user.nombre;
+                document.getElementById('userDniInfo').textContent = user.dni;
+                document.getElementById('userEmailInfo').textContent = user.email;
+
+                // Estado
+                const estadoBadge = document.getElementById('userEstadoInfo');
+                if (user.estado === 'active') {
+                    estadoBadge.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+                    estadoBadge.textContent = 'Activo';
+                } else {
+                    estadoBadge.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                    estadoBadge.textContent = 'Inactivo';
+                }
+
+                // Verificar que el usuario sea alumno
+                if (user.rol !== 'alumno') {
+                    console.warn('Usuario no es alumno, redirigiendo...');
+                    redirectByRole(user.rol);
+                }
+
+            } catch (error) {
+                console.error('Error al cargar datos del usuario:', error);
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Función para redirigir según el rol
+        function redirectByRole(rol) {
+            switch(rol) {
+                case 'admin':
+                case 'secretaria':
+                    window.location.href = 'dashboard-admin.html';
+                    break;
+                case 'profesor':
+                    window.location.href = 'dashboard-profesor.html';
+                    break;
+                default:
+                    window.location.href = 'dashboard-alumno.html';
+            }
+        }
+
+        // Función placeholder para cargar materias (futura integración)
+        async function loadMaterias() {
+            // TODO: Integrar con microservicio de materias
+            // const response = await fetch(`${API_URL}/materias`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${sessionStorage.getItem('authToken')}`
+            //     }
+            // });
+            // const materias = await response.json();
+            // renderMaterias(materias);
+        }
+
+        // Función placeholder para cargar trabajos (futura integración)
+        async function loadTrabajos() {
+            // TODO: Integrar con microservicio de trabajos
+            // const response = await fetch(`${API_URL}/trabajos/pendientes`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${sessionStorage.getItem('authToken')}`
+            //     }
+            // });
+            // const trabajos = await response.json();
+            // renderTrabajos(trabajos);
+        }
+
+        // Inicializar al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            // loadMaterias(); // Descomentar cuando esté el microservicio
+            // loadTrabajos(); // Descomentar cuando esté el microservicio
+        });
+    </script>
+</body>
+</html>
