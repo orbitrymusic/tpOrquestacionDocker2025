@@ -60,16 +60,28 @@ export const envs = {
     // Variables CTI - NOTIFICACIONES
     NOTIFICATION_SERVICE_URL: value.NOTIFICATION_SERVICE_URL,
 
-    // Variables CTI - LOGS
-    AMQP_USER: value.AMQP_USER,
-    AMQP_PASS: value.AMQP_PASS,
-    AMQP_HOST: value.AMQP_HOST,
-    AMQP_PORT: value.AMQP_PORT,
-    AMQP_VHOST: value.AMQP_VHOST,
-    AMQP_EXCHANGE: value.AMQP_EXCHANGE,
-    AMQP_ROUTING_KEY: value.AMQP_ROUTING_KEY,
-    MODULE_NAME: value.MODULE_NAME,
-    LOG_LEVEL: value.LOG_LEVEL,
-    VALIDATE: value.VALIDATE,
+    // // Variables CTI - LOGS //variables anteriores
+    // AMQP_USER: value.AMQP_USER,
+    // AMQP_PASS: value.AMQP_PASS,
+    // AMQP_HOST: value.AMQP_HOST,
+    // AMQP_PORT: value.AMQP_PORT,
+    // AMQP_VHOST: value.AMQP_VHOST,
+    // AMQP_EXCHANGE: value.AMQP_EXCHANGE,
+    // AMQP_ROUTING_KEY: value.AMQP_ROUTING_KEY,
+    // MODULE_NAME: value.MODULE_NAME,
+    // LOG_LEVEL: value.LOG_LEVEL,
+    // VALIDATE: value.VALIDATE,
+    //testeo de variables----****/////
+    amqpUser: value.AMQP_USER,          // Era AMQP_USER
+    amqpPass: value.AMQP_PASS,          // Era AMQP_PASS
+    amqpHost: value.AMQP_HOST,          // Era AMQP_HOST
+    amqpPort: value.AMQP_PORT,          // Era AMQP_PORT
+    amqpVhost: value.AMQP_VHOST,        // Era AMQP_VHOST
+    amqpExchange: value.AMQP_EXCHANGE,  // Era AMQP_EXCHANGE
+    amqpRoutingKey: value.AMQP_ROUTING_KEY, // Era AMQP_ROUTING_KEY
+    moduleName: value.MODULE_NAME,      // Era MODULE_NAME
+    logLevel: value.LOG_LEVEL,          // Era LOG_LEVEL
+    validateLogs: value.VALIDATE,       // Era VALIDATE
+    nodeEnv: value.NODE_ENV,            // Para usar en AmqpLogger
 };
 

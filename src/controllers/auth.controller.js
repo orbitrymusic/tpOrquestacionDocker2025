@@ -5,11 +5,11 @@ import UserService from '../services/user.service.js';
 
 export const loginController = async (req, res) => {
     const { email, password } = req.body;
-
+    const clientIp = req.ip || req.connection.remoteAddress //test  nuevo
     // TODO: Validación de entrada (Joi o Express-Validator)
 
     try {
-        const result = await UserService.login(email, password);
+        const result = await UserService.login(email, password, clientIp);
 
         if (!result) {
             // Falla de autenticación (usuario no encontrado o contraseña incorrecta)

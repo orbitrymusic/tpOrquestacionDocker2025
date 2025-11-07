@@ -2,7 +2,8 @@ import Usuario from '../models/User.entity.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { generateToken } from './jwt.service.js'
-import AmqpLogger from './AmqpLogger.service.js';
+// import AmqpLogger from './AmqpLogger.service.js';
+import { sendLog } from 'ds-logging-producer-kit';
 import CoreClientService from './CoreClient.service.js';
 import NotificationClientService from './notifyClient.service.js'; 
 import { envs } from '../config/envs.js';
@@ -197,55 +198,248 @@ async syncAlumnosAndNotify() {
       throw error; // <-- Lanzamos el error para que el controlador lo atrape.
     }
   }
-  //testeo de nueva funcion 
-  async login(identifier, password) {
-    // Determinar si el identificador es un email o un DNI
-    const isEmail = identifier.includes('@');
-    
-    // Buscar usuario por email o DNI según corresponda
-    const query = isEmail 
-      ? { email: identifier, estado: 'active' }
-      : { dni: identifier, estado: 'active' };
-    
-    const user = await this.model.findOne(query).select('+password');
-    
-    if (!user) {
-      AmqpLogger.warn('LOGIN_FAILED', { 
-        identifier, 
-        reason: 'Usuario no encontrado',
-        module: envs.moduleName 
+  ////////////////////////////////////////////////////testeo4////////////////////////////////////
+  async login(identifier, password, clientIp = "127.0.0.1") {
+  const logAttempt = async (level, message, context = {}) => {
+    try {
+      await sendLog({
+        level,
+        user: user?.email || identifier,
+        clientIp,  // ← Ahora sí usa la variable
+        message,
+        context
       });
-      return null;
+    } catch (e) {
+      console.error("Error al enviar log:", e.message);
     }
-    
-    const isMatch = await bcrypt.compare(password, user.password);
+  };
 
-    if (!isMatch) {
-      AmqpLogger.warn('LOGIN_FAILED', { 
-        userId: user._id.toString(),
-        identifier, 
-        reason: 'Contraseña incorrecta',
-        module: envs.moduleName 
-      });
-      return null; // Contraseña incorrecta
-    }
-
-    // Login exitoso
-    AmqpLogger.info('LOGIN_SUCCESS', { 
-      userId: user._id.toString(),
-      rol: user.rol,
-      module: envs.moduleName 
-    });
-
-    // Generar el Token JWT
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
-
-    const token = generateToken(userWithoutPassword);
-
-    return { user: userWithoutPassword, token };
+  const isEmail = identifier.includes('@');
+  const query = isEmail 
+    ? { email: identifier, estado: 'active' }
+    : { dni: identifier, estado: 'active' };
+  
+  const user = await this.model.findOne(query).select('+password');
+  
+  if (!user) {
+    await logAttempt("WARN", "LOGIN_FAILED - Usuario no encontrado", { identifier });
+    return null;
   }
-//fn anterior
+  
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    await logAttempt("WARN", "LOGIN_FAILED - Contraseña incorrecta", {
+      userId: user._id.toString(),
+      identifier
+    });
+    return null;
+  }
+
+  await logAttempt("INFO", "LOGIN_SUCCESS", {
+    userId: user._id.toString(),
+    rol: user.rol,
+    module: envs.moduleName 
+  });
+
+  const userWithoutPassword = user.toObject();
+  delete userWithoutPassword.password;
+  const token = generateToken(userWithoutPassword);
+
+  return { user: userWithoutPassword, token };
+}
+  //////////////////////////testeo de nueva funcion   3/Roland //////////////////////////////////
+
+
+// async login(identifier, password, clientIp = "127.0.0.1") {
+//     const isEmail = identifier.includes('@');
+//     const query = isEmail 
+//       ? { email: identifier, estado: 'active' }
+//       : { dni: identifier, estado: 'active' };
+    
+//     const user = await this.model.findOne(query).select('+password');
+    
+//     if (!user) {
+//       // Log de intento fallido
+//       try {
+//         await sendLog({
+//           level: "WARN",  // ← MAYÚSCULA
+//           user: identifier,
+//           clientIp: "127.0.0.1",  // ← IP válida (localhost)
+//           message: "LOGIN_FAILED - Usuario no encontrado",
+//           context: { identifier }
+//         });
+//       } catch (e) {
+//         console.error("Error al enviar log:", e.message);
+//       }
+//       return null;
+//     }
+    
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (!isMatch) {
+//       // Log de contraseña incorrecta
+//       try {
+//         await sendLog({
+//           level: "WARN",  // ← MAYÚSCULA
+//           user: user.email,
+//           clientIp: "127.0.0.1",  // ← IP válida
+//           message: "LOGIN_FAILED - Contraseña incorrecta",
+//           context: { 
+//             userId: user._id.toString(),
+//             identifier 
+//           }
+//         });
+//       } catch (e) {
+//         console.error("Error al enviar log:", e.message);
+//       }
+//       return null;
+//     }
+
+//     // Login exitoso
+//     try {
+//       await sendLog({
+//         level: "INFO",  // ← MAYÚSCULA
+//         user: user.email,
+//         clientIp: "127.0.0.1",  // ← IP válida
+//         message: "LOGIN_SUCCESS",
+//         context: { 
+//           userId: user._id.toString(),
+//           rol: user.rol,
+//           module: envs.moduleName 
+//         }
+//       });
+//     } catch (e) {
+//       console.error("Error al enviar log:", e.message);
+//     }
+
+//     const userWithoutPassword = user.toObject();
+//     delete userWithoutPassword.password;
+//     const token = generateToken(userWithoutPassword);
+
+//     return { user: userWithoutPassword, token };
+//   }
+
+  //////////////////////////testeo de nueva funcion 2 /Roland //////////////////////////////////
+
+
+// async login(identifier, password) {
+//     const isEmail = identifier.includes('@');
+//     const query = isEmail 
+//       ? { email: identifier, estado: 'active' }
+//       : { dni: identifier, estado: 'active' };
+    
+//     const user = await this.model.findOne(query).select('+password');
+    
+//     if (!user) {
+//       // Log de intento fallido
+//       try {
+//         await sendLog({
+//           level: "warn",
+//           user: identifier,
+//           clientIp: "unknown",
+//           message: "LOGIN_FAILED - Usuario no encontrado",
+//           context: { identifier }
+//         });
+//       } catch (e) {
+//         console.error("Error al enviar log:", e.message);
+//       }
+//       return null;
+//     }
+    
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (!isMatch) {
+//       // Log de contraseña incorrecta
+//       try {
+//         await sendLog({
+//           level: "warn",
+//           user: user.email,
+//           clientIp: "unknown",
+//           message: "LOGIN_FAILED - Contraseña incorrecta",
+//           context: { 
+//             userId: user._id.toString(),
+//             identifier 
+//           }
+//         });
+//       } catch (e) {
+//         console.error("Error al enviar log:", e.message);
+//       }
+//       return null;
+//     }
+
+//     // Login exitoso
+//     try {
+//       await sendLog({
+//         level: "info",
+//         user: user.email,
+//         clientIp: "unknown",
+//         message: "LOGIN_SUCCESS",
+//         context: { 
+//           userId: user._id.toString(),
+//           rol: user.rol,
+//           module: envs.moduleName 
+//         }
+//       });
+//     } catch (e) {
+//       console.error("Error al enviar log:", e.message);
+//     }
+
+//     const userWithoutPassword = user.toObject();
+//     delete userWithoutPassword.password;
+//     const token = generateToken(userWithoutPassword);
+
+//     return { user: userWithoutPassword, token };
+//   }
+  //////////////////////////testeo de nueva funcion 1 //////////////////////////////////
+  // async login(identifier, password) {
+  //   // Determinar si el identificador es un email o un DNI
+  //   const isEmail = identifier.includes('@');
+    
+  //   // Buscar usuario por email o DNI según corresponda
+  //   const query = isEmail 
+  //     ? { email: identifier, estado: 'active' }
+  //     : { dni: identifier, estado: 'active' };
+    
+  //   const user = await this.model.findOne(query).select('+password');
+    
+  //   if (!user) {
+  //     AmqpLogger.warn('LOGIN_FAILED', { 
+  //       identifier, 
+  //       reason: 'Usuario no encontrado',
+  //       module: envs.moduleName 
+  //     });
+  //     return null;
+  //   }
+    
+  //   const isMatch = await bcrypt.compare(password, user.password);
+
+  //   if (!isMatch) {
+  //     AmqpLogger.warn('LOGIN_FAILED', { 
+  //       userId: user._id.toString(),
+  //       identifier, 
+  //       reason: 'Contraseña incorrecta',
+  //       module: envs.moduleName 
+  //     });
+  //     return null; // Contraseña incorrecta
+  //   }
+
+  //   // Login exitoso
+  //   AmqpLogger.info('LOGIN_SUCCESS', { 
+  //     userId: user._id.toString(),
+  //     rol: user.rol,
+  //     module: envs.moduleName 
+  //   });
+
+  //   // Generar el Token JWT
+  //   const userWithoutPassword = user.toObject();
+  //   delete userWithoutPassword.password;
+
+  //   const token = generateToken(userWithoutPassword);
+
+  //   return { user: userWithoutPassword, token };
+  // }
+////////////////////////////////////fn anterior////////////////////////////////////
   // async login(email, password) {
   //   const user = await this.model.findOne({ email, estado: 'active' }).select('+password');
   //   if (!user) {
