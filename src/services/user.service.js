@@ -156,8 +156,6 @@ async syncAlumnosAndNotify() {
         });
       }
     }
-
-
     // 3. Finalización y Resumen
     const summary = `Sincronización finalizada. Creados: ${count.created}, Actualizados/Reactivados: ${count.updated}, Omitidos: ${count.skipped}.`;
     AmqpLogger.info(`[${operationName}] ${summary}`, { module: envs.moduleName, summary: count });
@@ -196,108 +194,6 @@ async syncAlumnosAndNotify() {
       throw error; // <-- Lanzamos el error para que el controlador lo atrape.
     }
   }
-  //////////////////////////////////////////////////// "testeo 4"  ////////////////////////////////////
-//   async login(identifier, password, clientIp = "127.0.0.1") {
-//   const logAttempt = async (level, message, context = {}) => {
-//     try {
-//       await sendLog({
-//         level,
-//         user: user?.email || identifier,
-//         clientIp,  // ← Ahora sí usa la variable
-//         message,
-//         context
-//       });
-//     } catch (e) {
-//       console.error("Error al enviar log:", e.message);
-//     }
-//   };
-
-//   const isEmail = identifier.includes('@');
-//   const query = isEmail 
-//     ? { email: identifier, estado: 'active' }
-//     : { dni: identifier, estado: 'active' };
-  
-//   const user = await this.model.findOne(query).select('+password');
-  
-//   if (!user) {
-//     await logAttempt("WARN", "LOGIN_FAILED - Usuario no encontrado", { identifier });
-//     return null;
-//   }
-  
-//   const isMatch = await bcrypt.compare(password, user.password);
-
-//   if (!isMatch) {
-//     await logAttempt("WARN", "LOGIN_FAILED - Contraseña incorrecta", {
-//       userId: user._id.toString(),
-//       identifier
-//     });
-//     return null;
-//   }
-
-//   await logAttempt("INFO", "LOGIN_SUCCESS", {
-//     userId: user._id.toString(),
-//     rol: user.rol,
-//     module: envs.moduleName 
-//   });
-
-//   const userWithoutPassword = user.toObject();
-//   delete userWithoutPassword.password;
-//   const token = generateToken(userWithoutPassword);
-
-//   return { user: userWithoutPassword, token };
-// }
-  //////////////////////////////////////////////////////////////////////////
-//   async login(identifier, password, clientIp = "127.0.0.1") {
-//   // Primero buscar el usuario
-//   const isEmail = identifier.includes('@');
-//   const query = isEmail 
-//     ? { email: identifier, estado: 'active' }
-//     : { dni: identifier, estado: 'active' };
-  
-//   const user = await this.model.findOne(query).select('+password');
-  
-//   // Ahora definir logAttempt cuando ya tenemos user
-//   const logAttempt = async (level, message, context = {}) => {
-//     try {
-//       await sendLog({
-//         level,
-//         user: user?.email || identifier,  // ← Ahora sí existe user
-//         clientIp,
-//         message,
-//         context
-//       });
-//     } catch (e) {
-//       console.error("Error al enviar log:", e.message);
-//     }
-//   };
-  
-//   if (!user) {
-//     await logAttempt("WARN", "LOGIN_FAILED - Usuario no encontrado", { identifier });
-//     return null;
-//   }
-
-//   const isMatch = await bcrypt.compare(password, user.password);
-
-//   if (!isMatch) {
-//     await logAttempt("WARN", "LOGIN_FAILED - Contraseña incorrecta", {
-//       userId: user._id.toString(),
-//       identifier
-//     });
-//     return null;
-//   }
-
-//   await logAttempt("INFO", "LOGIN_SUCCESS", {
-//     userId: user._id.toString(),
-//     rol: user.rol,
-//     module: envs.moduleName 
-//   });
-
-//   const userWithoutPassword = user.toObject();
-//   delete userWithoutPassword.password;
-//   const token = generateToken(userWithoutPassword);
-
-//   return { user: userWithoutPassword, token };
-// }
 //////////////////////////////////////////////////"testeo 5" ///////////////////7////////////////////////////////
 async login(identifier, password, clientIp = "127.0.0.1") {
   console.log("🔐 [LOGIN] Iniciando proceso de login para:", identifier);
@@ -368,7 +264,7 @@ async login(identifier, password, clientIp = "127.0.0.1") {
   console.log("🎫 [LOGIN] Token generado, retornando respuesta");
   return { user: userWithoutPassword, token };
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////7
+///////////////////////////////////////////////////////////////////////////////////////////////////
   async getAll() {
     //Filtrar solo usuarios 'active' y excluir la contraseña
     return this.model.find({ estado: 'active' }).select('-password');
@@ -399,7 +295,6 @@ async login(identifier, password, clientIp = "127.0.0.1") {
       throw error;
     }
   }
-
   /**
  * Realiza un Borrado Lógico (Soft Delete) cambiando el estado a 'inactive'.
  * @param {string} userId - ID del usuario a "eliminar".
@@ -419,8 +314,6 @@ async login(identifier, password, clientIp = "127.0.0.1") {
       throw error;
     }
   }
-
-
 };
 
 export default new UserService();
