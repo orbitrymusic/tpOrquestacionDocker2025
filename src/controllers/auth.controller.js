@@ -1,6 +1,6 @@
 import UserService from '../services/user.service.js';
 
-// Asumo que tienes una función para manejar errores estandarizados
+// Se cambio email x DNI para Dockerizar , xq generaba connflicto y para ser similar al ITS!!
 // import { handleError } from '../utils/handleError.js';
 
 // export const loginController = async (req, res) => {

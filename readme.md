@@ -132,10 +132,8 @@ docker-compose up --build
 <img src="./assets/1.jpg" width="800" />
 </br>
 </br>
-7️⃣ Ya registrado un usuario con alguno de los roles posibles, utiliza Postman para iniciar sesion correctamente, ingresando su número de DNI y su contraseña. </br></br>
+7️⃣ Ya registrado un usuario con alguno de los roles posibles, utiliza Postman para iniciar sesion correctamente,utilizando el metodo POST, ingresando su número de DNI y su contraseña. </br></br>
 
 ![Inicio de sesion de usuario](./assets/2.jpg)
 
-<!-- https://yaytext.com/es/emoji/teclas/#eclas-6-fb691255 
 
-https://www.google.com/search?q=como+se+hace+para+achicar+una+imagen+en+redme.md%3F&sca_esv=84dc3d1843792866&rlz=1C1FHFK_enAR1123AR1123&udm=50&fbs=AIIjpHx4nJjfGojPVHhEACUHPiMQaAi24bJ8cuprwzDXM3paF1drgtjZS4WZtMFeVBcvG2PBBfduymLUKPAro6xx1eRr7z8M6lA7s5TaTrzILqZ4jYRuo5xjD6zwxL-mDGSJx8Op84s7t6cfCkOT1W-Y-jwYxvHWFjzc6bDfv72gXrBkrT34_FyGfkOV3uiKTbeVSSX82lUf2DSihOcCl6SRoW2MbtjG7ZR4AefJOv-EmaA0NqbnPQ0&aep=1&ntc=1&sa=X&ved=2ahUKEwjv2avUjfKQAxVeLrkGHVAvL6YQ2J8OegQIEBAE&biw=1536&bih=730&dpr=1.25&mstk=AUtExfC362zfXGzTZ3gdQ90-h1dFvHeSDSd3UZl4NzdTXmhyhnoGVnzkeXhKO9fv8KpoAiNI7J8wkcqtWDjWTGDXY4CgTE-xmIAjj07bG9Qeo-e1YgVJE84_OxVnB4MyZjMPfPf6vsScUta5pmD0tHfQea5aVHei2PoAey0&csuir=1-->
