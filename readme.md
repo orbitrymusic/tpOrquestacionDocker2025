@@ -21,7 +21,7 @@ Forma parte del ecosistema de microservicios del proyecto **APP ITS Cipolletti**
 2. [Descripción General](#📋-descripción-general)
 3. [Arquitectura y Tecnologías](#🏗️-arquitectura-y-tecnologías)
 4. [Estructura del Proyecto](#📁-estructura-del-proyecto)
-5. [Instalación y Ejecución con Docker](#⚙️-instalación-y-ejecución-con-docker)
+5. [Instalación y Ejecución con Docker](#🐋-instalación-y-ejecución-con-docker)
 
 ---
 
@@ -85,7 +85,7 @@ src/
 
 ```
 
-## ⚙️ Instalación y Ejecución (ejecutar comandos bash)
+## 🐋 Instalación y Ejecución con Docker
 
 1️⃣ Clonar el repositorio.
 ``` bash
